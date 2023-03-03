@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace RSAAlgorithm
 {
@@ -28,6 +27,19 @@ namespace RSAAlgorithm
             }
 
             return true;
+        }
+        
+        public static long ConvertTextToNumber(string text)
+        {
+            var result = 0L;
+            var length = text.Length;
+
+            for (var i = 0; i < length; i++)
+            {
+                result += (long)(text[i] * Math.Pow(10, length - i - 1));
+            }
+
+            return result;
         }
     }
 }
