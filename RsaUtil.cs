@@ -21,7 +21,18 @@ namespace RSAAlgorithm
 
             return true;
         }
-        
+
+        public static int GCD(int a, int b)
+        {
+            while (true)
+            {
+                if (b == 0) return a;
+                var a1 = a;
+                a = b;
+                b = a1 % b;
+            }
+        }
+
         public static long ConvertTextToNumber(string text)
         {
             var result = 0L;
