@@ -10,15 +10,8 @@ namespace RSAAlgorithm
             {
                 return false;
             }
-
-            if (n % 2 == 0)
-            {
-                return n == 2;
-            }
-
-            var l = (long)(Math.Sqrt(n) + 0.5);
-
-            for (var i = 3; i <= l; i += 2)
+            
+            for (var i = 2; i < n; i++)
             {
                 if (n % i == 0)
                 {
@@ -32,11 +25,25 @@ namespace RSAAlgorithm
         public static long ConvertTextToNumber(string text)
         {
             var result = 0L;
-            var length = text.Length;
-
-            for (var i = 0; i < length; i++)
+            
+            for (var i = 0; i < text.Length; i++)
             {
-                result += (long)(text[i] * Math.Pow(10, length - i - 1));
+                result += (long)(text[i] * Math.Pow(10, text.Length - i - 1));
+            }
+
+            return result;
+        }
+        
+        public static string ConvertNumberToText(long number)
+        {
+            var result = "";
+            var text = number.ToString();
+
+            for (var i = 0; i < text.Length; i += 2)
+            {
+                var temp = text.Substring(i, 2);
+                // ReSharper disable once HeapView.BoxingAllocation
+                result += (char)int.Parse(temp);
             }
 
             return result;

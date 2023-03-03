@@ -48,14 +48,14 @@ namespace RSAAlgorithm
             PrivateKey = (Constant * FactorN + 1) / E;
         }
         
-        public long Encrypt(int initialNumbers)
+        public long Encrypt(string text)
         {
-            return (long)Math.Pow(initialNumbers, E % PublicKey);
+            return (long)Math.Pow(RsaUtil.ConvertTextToNumber(text), E % PublicKey);
         }
         
-        public long Decrypt(int encryptedNumbers)
+        public string Decrypt(long encryptedNumbers)
         {
-            return (long)Math.Pow(encryptedNumbers, PrivateKey % PublicKey);
+            return RsaUtil.ConvertNumberToText((long)Math.Pow(encryptedNumbers, PrivateKey % PublicKey));
         }
     }
 }
