@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Numerics;
 
 namespace RSAAlgorithm
 {
     public static class RsaUtil
     {
+        private const int MinAscii = 32;
+        private const int MaxAscii = 126;
         public static bool IsPrime(int n)
         {
             if (n <= 1)
@@ -33,28 +36,49 @@ namespace RSAAlgorithm
             }
         }
 
-        public static long ConvertTextToNumber(string text)
+        public static BigInteger ConvertTextToNumber(string text)
         {
-            var result = 0L;
+            var result = new BigInteger();
             
-            for (var i = 0; i < text.Length; i++)
+            foreach (var t in text)
             {
-                result += (long)(text[i] * Math.Pow(10, text.Length - i - 1));
+                if (t >= MinAscii && t <= MaxAscii)
+                {
+                    int numOfDigits = 0;
+                    BigInteger temp = t;
+                    while (temp > 0)
+                    {
+                        temp /= 10;
+                        numOfDigits++;
+                    }
+                    var multiplier = BigInteger.Pow(10, numOfDigits);
+                    result = result * multiplier + t;
+                }
+                else
+                {
+                    return -1;
+                }
             }
-
             return result;
         }
         
-        public static string ConvertNumberToText(long number)
+        public static string ConvertNumberToText(BigInteger number)
         {
             var result = "";
             var text = number.ToString();
-
-            for (var i = 0; i < text.Length; i += 2)
+            var intHold = 0;
+            for (var i = 0; i < text.Length; i++)
             {
-                var temp = text.Substring(i, 2);
-                // ReSharper disable once HeapView.BoxingAllocation
-                result += (char)int.Parse(temp);
+                var asciiNumber = intHold != 0 ? intHold : int.Parse(text.Substring(i, 1));
+                if (asciiNumber >= MinAscii && asciiNumber <= MaxAscii)
+                {
+                    result += (char)asciiNumber;
+                    intHold = 0;
+                }
+                else
+                {
+                    intHold = intHold * 10 + asciiNumber;
+                }
             }
 
             return result;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace RSAAlgorithm
 {
@@ -9,8 +10,10 @@ namespace RSAAlgorithm
         private int P
         {
             get => _p;
-            set => _p = RsaUtil.IsPrime(value) ? // P must be a prime number 
-                value : throw new ArgumentException("P must be a prime number");
+            set => _p = RsaUtil.IsPrime(value)
+                ? // P must be a prime number 
+                value
+                : throw new ArgumentException("P must be a prime number");
         }
 
         private int _q;
@@ -18,24 +21,15 @@ namespace RSAAlgorithm
         private int Q
         {
             get => _q;
-            set => _q = RsaUtil.IsPrime(value) ? // Q must be a prime number
-                value  : throw new ArgumentException("Q must be a prime number");
+            set => _q = RsaUtil.IsPrime(value)
+                ? // Q must be a prime number
+                value
+                : throw new ArgumentException("Q must be a prime number");
         }
 
         private int FactorN { get; set; }
 
-        private int _e;
-
-        private int E
-        {
-            get => _e;
-            set => _e = value > 1 && value < FactorN // E must be greater than 1 and less than factor of Public Key
-                ? RsaUtil.GCD(value, FactorN) == 1 // E must be a coprime of FactorN
-                    ? value
-                    : throw new ArgumentException("E must be a prime number")
-                : throw new ArgumentException
-                    ("E must be greater than 1 and less than factor of Public Key");
-        }
+        private int E { get; set; }
 
         private int PublicKey { get; set; }
 
@@ -70,16 +64,20 @@ namespace RSAAlgorithm
             PrivateKey = (Constant * FactorN + 1) / E;
         }
 
-        public long Encrypt(string text)
+        public Tuple<BigInteger, int> Encrypt(string text)
         {
+            var power = BigInteger.Pow(RsaUtil.ConvertTextToNumber(text), E);
+            var result = power % (BigInteger) PublicKey;
             // Return encrypted numbers
-            return (long)Math.Pow(RsaUtil.ConvertTextToNumber(text), E) % PublicKey;
+            return Tuple.Create(result, PublicKey);
         }
 
-        public string Decrypt(long encryptedNumbers)
+        public string Decrypt(long encryptedNumbers, int publicKey)
         {
+            var power = BigInteger.Pow(encryptedNumbers, PrivateKey);
+            var result = power % publicKey;
             // Return decrypted text
-            return RsaUtil.ConvertNumberToText((long)Math.Pow(encryptedNumbers, PrivateKey) % PublicKey);
+            return RsaUtil.ConvertNumberToText(result);
         }
     }
 }
