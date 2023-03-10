@@ -76,10 +76,10 @@ namespace RSAAlgorithm
             return (long)Math.Pow(RsaUtil.ConvertTextToNumber(text), E) % PublicKey;
         }
 
-        public string Decrypt(long encryptedNumbers)
+        public string Decrypt(long encryptedNumbers, int publicKey)
         {
             // Return decrypted text
-            return RsaUtil.ConvertNumberToText((long)Math.Pow(encryptedNumbers, PrivateKey) % PublicKey);
+            return RsaUtil.ConvertNumberToText((long)Math.Pow(encryptedNumbers, PrivateKey) % publicKey);
         }
     }
 }
