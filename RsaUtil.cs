@@ -25,7 +25,7 @@ namespace RSAAlgorithm
             return true;
         }
 
-        public static int GCD(int a, int b)
+        public static int Gcd(int a, int b)
         {
             while (true)
             {
@@ -66,21 +66,55 @@ namespace RSAAlgorithm
         {
             var result = "";
             var text = number.ToString();
-            var intHold = 0;
+            var intHoldIndex = 0;
+            var asciiNumber = 0;
             for (var i = 0; i < text.Length; i++)
             {
-                var asciiNumber = intHold != 0 ? intHold : int.Parse(text.Substring(i, 1));
+                asciiNumber = asciiNumber * (int)(Math.Pow(10, intHoldIndex)) + int.Parse(text.Substring(i, 1));
                 if (asciiNumber >= MinAscii && asciiNumber <= MaxAscii)
                 {
                     result += (char)asciiNumber;
-                    intHold = 0;
+                    intHoldIndex = 0;
+                    asciiNumber = 0;
                 }
                 else
                 {
-                    intHold = intHold * 10 + asciiNumber;
+                    intHoldIndex++;
                 }
             }
 
+            return result;
+        }
+
+        public static int GetBitSize(int i)
+        {
+            var bits = 0;
+            while (i != 0)
+            {
+                i >>= 1;
+                bits++;
+            }
+            return bits;    
+        }
+        
+        public static int GetBitSize(BigInteger i)
+        {
+            var bits = 0;
+            while (i != 0)
+            {
+                i >>= 1;
+                bits++;
+            }
+            return bits;    
+        }
+
+        public static int GetMaxNumberFromBitSize(int i)
+        {
+            var result = 0;
+            for (var j = 0; j < i; j++)
+            {
+                result += (int)Math.Pow(2, j);
+            }
             return result;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace RSAAlgorithm
@@ -50,29 +51,38 @@ namespace RSAAlgorithm
             E = 2;
             while (E < FactorN)
             {
-                if (RsaUtil.GCD(E, FactorN) == 1) // E must be a coprime of FactorN
+                if (RsaUtil.Gcd(E, FactorN) == 1) // E must be a coprime of FactorN
                 {
                     break;
                 }
-
                 E++;
             }
 
             // Calculate Public Key
             PublicKey = P * Q;
             // Calculate Private Key
-            PrivateKey = (Constant * FactorN + 1) / E;
+            PrivateKey = 1;
+            while (true)
+            {
+                if (PrivateKey * E % FactorN == 1)
+                {
+                    break;
+                }
+
+                PrivateKey++;
+            }
         }
 
         public Tuple<BigInteger, int> Encrypt(string text)
         {
-            var power = BigInteger.Pow(RsaUtil.ConvertTextToNumber(text), E);
-            var result = power % (BigInteger) PublicKey;
+            var textNumber = RsaUtil.ConvertTextToNumber(text);
+            var power = BigInteger.Pow(textNumber, E);
+            var result = power % PublicKey;
             // Return encrypted numbers
             return Tuple.Create(result, PublicKey);
         }
 
-        public string Decrypt(long encryptedNumbers, int publicKey)
+        public string Decrypt(BigInteger encryptedNumbers, int publicKey)
         {
             var power = BigInteger.Pow(encryptedNumbers, PrivateKey);
             var result = power % publicKey;

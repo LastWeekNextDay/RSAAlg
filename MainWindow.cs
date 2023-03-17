@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Numerics;
 using System.Windows.Forms;
 
 namespace RSAAlgorithm
@@ -90,7 +91,7 @@ namespace RSAAlgorithm
             {
                 // If the decrypt check box is checked, then decrypt the text
                 var rsa = new Rsa(int.Parse(PNumber.Text), int.Parse(QNumber.Text));
-                OutputTextBox.Text = rsa.Decrypt(long.Parse(InputTextBox.Text),
+                OutputTextBox.Text = rsa.Decrypt(BigInteger.Parse(InputTextBox.Text),
                     int.Parse(PublicKeyTextBox.Text));
             }
             else
