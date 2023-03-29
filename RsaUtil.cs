@@ -1,19 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Numerics;
 
 namespace RSAAlgorithm
 {
     public static class RsaUtil
     {
-        private const int MinAscii = 32;
-        private const int MaxAscii = 126;
         public static bool IsPrime(int n)
         {
             if (n <= 1)
             {
                 return false;
             }
-            
+
             for (var i = 2; i < n; i++)
             {
                 if (n % i == 0)
@@ -36,86 +34,85 @@ namespace RSAAlgorithm
             }
         }
 
-        public static BigInteger ConvertTextToNumber(string text)
+        public static List<BigInteger> ConvertTextToNumbersList(string text)
         {
-            var result = new BigInteger();
-            
+            var result = new List<BigInteger>();
             foreach (var t in text)
             {
-                if (t >= MinAscii && t <= MaxAscii)
-                {
-                    int numOfDigits = 0;
-                    BigInteger temp = t;
-                    while (temp > 0)
-                    {
-                        temp /= 10;
-                        numOfDigits++;
-                    }
-                    var multiplier = BigInteger.Pow(10, numOfDigits);
-                    result = result * multiplier + t;
-                }
-                else
-                {
-                    return -1;
-                }
+                if (t < Constants.MinAscii || t > Constants.MaxAscii) return null;
+                result.Add(t);
             }
+
             return result;
         }
-        
-        public static string ConvertNumberToText(BigInteger number)
+
+        public static string ConvertNumbersListToText(List<BigInteger> numbers)
         {
             var result = "";
-            var text = number.ToString();
-            var intHoldIndex = 0;
-            var asciiNumber = 0;
-            for (var i = 0; i < text.Length; i++)
+            foreach (var number in numbers)
             {
-                asciiNumber = asciiNumber * (int)(Math.Pow(10, intHoldIndex)) + int.Parse(text.Substring(i, 1));
-                if (asciiNumber >= MinAscii && asciiNumber <= MaxAscii)
-                {
-                    result += (char)asciiNumber;
-                    intHoldIndex = 0;
-                    asciiNumber = 0;
-                }
-                else
-                {
-                    intHoldIndex++;
-                }
+                result += (char)number;
             }
 
             return result;
         }
 
-        public static int GetBitSize(int i)
+        public static List<BigInteger> ConvertNumberToNumbersList(BigInteger number)
         {
-            var bits = 0;
-            while (i != 0)
+            var temp = number;
+            var numbersList = new List<BigInteger>();
+            while (temp != 0)
             {
-                i >>= 1;
-                bits++;
+                numbersList.Add((int)(temp % 256));
+                temp /= 256;
             }
-            return bits;    
-        }
-        
-        public static int GetBitSize(BigInteger i)
-        {
-            var bits = 0;
-            while (i != 0)
-            {
-                i >>= 1;
-                bits++;
-            }
-            return bits;    
+
+            numbersList.Reverse();
+            return numbersList;
         }
 
-        public static int GetMaxNumberFromBitSize(int i)
+        public static BigInteger ConvertNumbersListToNumber(List<BigInteger> list)
         {
-            var result = 0;
-            for (var j = 0; j < i; j++)
+            var size = list.Count;
+            BigInteger result = 0;
+            foreach (var number in list)
             {
-                result += (int)Math.Pow(2, j);
+                result += number * BigInteger.Pow(256, size - 1);
+                size--;
             }
+
             return result;
+        }
+
+        public static List<BigInteger> ConvertPublicKeyToPrimeNumbers(int publicKey)
+        {
+            var list = new List<BigInteger>();
+            var p = 2;
+            int q;
+            while (true)
+            {
+                if (publicKey % p == 0)
+                {
+                    q = publicKey / p;
+                    break;
+                }
+
+                p++;
+            }
+
+            list.Add(p);
+            list.Add(q);
+            return list;
+        }
+
+        public static BigInteger EncryptNumber(BigInteger number, int publicKey, int e)
+        {
+            return BigInteger.ModPow(number, e, publicKey);
+        }
+
+        public static BigInteger DecryptNumber(BigInteger number, int publicKey, int privateKey)
+        {
+            return BigInteger.ModPow(number, privateKey, publicKey);
         }
     }
 }

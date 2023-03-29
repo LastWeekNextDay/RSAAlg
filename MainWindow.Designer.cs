@@ -36,8 +36,6 @@
             this.ActionButton = new System.Windows.Forms.Button();
             this.InputTextBox = new System.Windows.Forms.RichTextBox();
             this.DecryptCheckBox = new System.Windows.Forms.CheckBox();
-            this.PublicKeyTextBox = new System.Windows.Forms.RichTextBox();
-            this.PublicKeyLabel = new System.Windows.Forms.Label();
             this.OutputTextBox = new System.Windows.Forms.RichTextBox();
             this.ArrowLabel = new System.Windows.Forms.Label();
             this.PickFromFileButton = new System.Windows.Forms.Button();
@@ -106,22 +104,6 @@
             this.DecryptCheckBox.UseVisualStyleBackColor = true;
             this.DecryptCheckBox.CheckedChanged += new System.EventHandler(this.DecryptCheckBox_CheckedChanged);
             // 
-            // PublicKeyTextBox
-            // 
-            this.PublicKeyTextBox.Location = new System.Drawing.Point(347, 44);
-            this.PublicKeyTextBox.Name = "PublicKeyTextBox";
-            this.PublicKeyTextBox.Size = new System.Drawing.Size(314, 22);
-            this.PublicKeyTextBox.TabIndex = 10;
-            this.PublicKeyTextBox.Text = "";
-            // 
-            // PublicKeyLabel
-            // 
-            this.PublicKeyLabel.Location = new System.Drawing.Point(347, 18);
-            this.PublicKeyLabel.Name = "PublicKeyLabel";
-            this.PublicKeyLabel.Size = new System.Drawing.Size(100, 23);
-            this.PublicKeyLabel.TabIndex = 11;
-            this.PublicKeyLabel.Text = "Public Key";
-            // 
             // OutputTextBox
             // 
             this.OutputTextBox.Location = new System.Drawing.Point(347, 97);
@@ -167,8 +149,6 @@
             this.Controls.Add(this.PickFromFileButton);
             this.Controls.Add(this.ArrowLabel);
             this.Controls.Add(this.OutputTextBox);
-            this.Controls.Add(this.PublicKeyLabel);
-            this.Controls.Add(this.PublicKeyTextBox);
             this.Controls.Add(this.DecryptCheckBox);
             this.Controls.Add(this.InputTextBox);
             this.Controls.Add(this.ActionButton);
@@ -187,8 +167,6 @@
 
         private System.Windows.Forms.Button PickFromFileButton;
 
-        private System.Windows.Forms.RichTextBox PublicKeyTextBox;
-        private System.Windows.Forms.Label PublicKeyLabel;
         private System.Windows.Forms.RichTextBox InputTextBox;
         private System.Windows.Forms.Label ArrowLabel;
 

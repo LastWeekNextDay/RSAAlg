@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace RSAAlgorithm
@@ -32,11 +31,9 @@ namespace RSAAlgorithm
 
         private int E { get; set; }
 
-        private int PublicKey { get; set; }
+        public int PublicKey { get; set; }
 
         private int PrivateKey { get; set; }
-
-        private int Constant { get; set; } = 5;
 
         public Rsa(int p, int q)
         {
@@ -48,7 +45,7 @@ namespace RSAAlgorithm
             FactorN = (P - 1) * (Q - 1);
 
             // Calculate E
-            E = 2;
+            E = 3;
             while (E < FactorN)
             {
                 if (RsaUtil.Gcd(E, FactorN) == 1) // E must be a coprime of FactorN
@@ -60,6 +57,8 @@ namespace RSAAlgorithm
 
             // Calculate Public Key
             PublicKey = P * Q;
+            if (PublicKey < 127) throw new Exception("Public Key must be greater than maximum visible ASCII character");
+            
             // Calculate Private Key
             PrivateKey = 1;
             while (true)
@@ -73,21 +72,27 @@ namespace RSAAlgorithm
             }
         }
 
-        public Tuple<BigInteger, int> Encrypt(string text)
+        public BigInteger EncryptAscii(string text)
         {
-            var textNumber = RsaUtil.ConvertTextToNumber(text);
-            var power = BigInteger.Pow(textNumber, E);
-            var result = power % PublicKey;
-            // Return encrypted numbers
-            return Tuple.Create(result, PublicKey);
+            var numbers = RsaUtil.ConvertTextToNumbersList(text);
+            if (numbers == null) throw new Exception("Text must be in ASCII range");
+            for (var i = 0; i < numbers.Count; i++)
+            {
+                numbers[i] = RsaUtil.EncryptNumber(numbers[i], PublicKey, E);
+            }
+            var number = RsaUtil.ConvertNumbersListToNumber(numbers);
+            return number;
         }
 
-        public string Decrypt(BigInteger encryptedNumbers, int publicKey)
+        public string DecryptAscii(BigInteger encryptedNumbers)
         {
-            var power = BigInteger.Pow(encryptedNumbers, PrivateKey);
-            var result = power % publicKey;
-            // Return decrypted text
-            return RsaUtil.ConvertNumberToText(result);
+            var numbers = RsaUtil.ConvertNumberToNumbersList(encryptedNumbers);
+            for (var i = 0; i < numbers.Count; i++)
+            {
+                numbers[i] = RsaUtil.DecryptNumber(numbers[i], PublicKey, PrivateKey);
+            }
+            var message = RsaUtil.ConvertNumbersListToText(numbers);
+            return message;
         }
     }
 }
