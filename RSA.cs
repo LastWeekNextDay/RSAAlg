@@ -45,7 +45,7 @@ namespace RSAAlgorithm
             FactorN = (P - 1) * (Q - 1);
 
             // Calculate E
-            E = 3;
+            E = 2;
             while (E < FactorN)
             {
                 if (RsaUtil.Gcd(E, FactorN) == 1) // E must be a coprime of FactorN
